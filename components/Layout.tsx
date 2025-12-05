@@ -1,13 +1,22 @@
 import React, { ReactNode } from 'react';
 import { BookOpen, GraduationCap, Github, ExternalLink, LogIn, UserPlus, LogOut, User } from 'lucide-react';
+import { LoginModal, SignUpModal } from './AuthModals';
 
 interface LayoutProps {
   children: ReactNode;
   onGoHome: () => void;
   showHomeButton: boolean;
   isLoggedIn?: boolean;
-  onLogin?: () => void;
   onLogout?: () => void;
+  
+  // Auth Modal State Props (passed from App)
+  isLoginOpen?: boolean;
+  isSignUpOpen?: boolean;
+  onCloseLogin?: () => void;
+  onCloseSignUp?: () => void;
+  onOpenLogin?: () => void;
+  onOpenSignUp?: () => void;
+  onAuthSuccess?: () => void;
 }
 
 const Layout: React.FC<LayoutProps> = ({ 
@@ -15,8 +24,15 @@ const Layout: React.FC<LayoutProps> = ({
   onGoHome, 
   showHomeButton,
   isLoggedIn = false,
-  onLogin,
-  onLogout
+  onLogout,
+  
+  isLoginOpen = false,
+  isSignUpOpen = false,
+  onCloseLogin = () => {},
+  onCloseSignUp = () => {},
+  onOpenLogin = () => {},
+  onOpenSignUp = () => {},
+  onAuthSuccess = () => {}
 }) => {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
@@ -37,7 +53,7 @@ const Layout: React.FC<LayoutProps> = ({
           
           <div className="flex items-center gap-4">
             {/* Social Links */}
-            <a href="https://github.com/suzukifrancisco2" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-800 transition-colors hidden sm:block">
+            <a href="https://github.com/tico-bughead" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-800 transition-colors hidden sm:block">
               <span className="sr-only">GitHub</span>
               <Github size={20} />
             </a>
@@ -65,14 +81,14 @@ const Layout: React.FC<LayoutProps> = ({
             ) : (
               <div className="flex items-center gap-2 sm:gap-3">
                 <button 
-                  onClick={onLogin}
+                  onClick={onOpenLogin}
                   className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors"
                 >
                   <LogIn size={16} className="hidden sm:inline" />
                   Entrar
                 </button>
                 <button 
-                  onClick={onLogin} // For demo purposes, both open "login" state
+                  onClick={onOpenSignUp} 
                   className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-all hover:shadow-md active:scale-95"
                 >
                   <UserPlus size={16} className="hidden sm:inline" />
@@ -130,6 +146,26 @@ const Layout: React.FC<LayoutProps> = ({
           </div>
         </div>
       </footer>
+
+      {/* Modals */}
+      <LoginModal 
+        isOpen={!!isLoginOpen} 
+        onClose={onCloseLogin} 
+        onSwitchToSignUp={() => {
+          onCloseLogin();
+          onOpenSignUp();
+        }}
+        onLoginSuccess={onAuthSuccess}
+      />
+      <SignUpModal 
+        isOpen={!!isSignUpOpen} 
+        onClose={onCloseSignUp}
+        onSwitchToLogin={() => {
+          onCloseSignUp();
+          onOpenLogin();
+        }}
+        onSignUpSuccess={onAuthSuccess}
+      />
     </div>
   );
 };

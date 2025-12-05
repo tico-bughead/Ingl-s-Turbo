@@ -28,56 +28,6 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #94a3b8; 
       }
-
-      /* Print Styles (A4 / PDF) */
-      @media print {
-        @page {
-          size: A4;
-          margin: 1.5cm;
-        }
-        
-        body {
-          background-color: white !important;
-          color: black !important;
-          -webkit-print-color-adjust: exact !important;
-          print-color-adjust: exact !important;
-        }
-
-        /* Hide UI elements */
-        .no-print, 
-        button:not(.force-print),
-        header, 
-        footer,
-        ::-webkit-scrollbar {
-          display: none !important;
-        }
-
-        /* Layout overrides */
-        .min-h-screen {
-          min-height: auto !important;
-        }
-        
-        main {
-          padding: 0 !important;
-          max-width: 100% !important;
-        }
-
-        /* Avoid breaking elements */
-        .break-inside-avoid {
-          page-break-inside: avoid;
-        }
-
-        /* Ensure borders print */
-        * {
-          border-color: #e2e8f0 !important; /* slate-200 */
-        }
-        
-        /* Force background colors for Grammar Bricks */
-        [class*="bg-"] {
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-      }
     </style>
   <script type="importmap">
 {
