@@ -6,18 +6,15 @@ import Layout from './components/Layout';
 import UnitView from './components/UnitView';
 import ChatBot from './components/ChatBot';
 import LiveVoice from './components/LiveVoice';
+import StartupPermissionModal from './components/StartupPermissionModal';
 import { Loader2, Lock, Play, CheckCircle2, ChevronRight, AlertTriangle, Sparkles, AudioLines } from 'lucide-react';
 
 export default function App() {
+  const [showPermissionModal, setShowPermissionModal] = useState(true);
   const [activeBook, setActiveBook] = useState<BookDefinition | null>(null);
   const [activeUnit, setActiveUnit] = useState<UnitDefinition | null>(null);
   const [unitContent, setUnitContent] = useState<GeneratedUnitContent | null>(null);
   const [loading, setLoading] = useState(false);
-  
-  // Auth State
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   
   // Track completed units with persistence
   const [completedUnits, setCompletedUnits] = useState<string[]>(() => {
@@ -75,38 +72,25 @@ export default function App() {
     setUnitContent(content);
   };
 
-  // Auth Handlers
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-    setIsLoginOpen(false);
-    setIsSignUpOpen(false);
-  };
-
-  const handleLogout = () => setIsLoggedIn(false);
-  
-  // Generic Layout wrapper to inject auth props
+  // Generic Layout wrapper
   const AppLayout: React.FC<{ children: React.ReactNode, showHomeButton: boolean }> = ({ children, showHomeButton }) => (
     <Layout 
         onGoHome={handleGoHome} 
         showHomeButton={showHomeButton}
-        isLoggedIn={isLoggedIn}
-        onLogout={handleLogout}
-        
-        isLoginOpen={isLoginOpen}
-        isSignUpOpen={isSignUpOpen}
-        onOpenLogin={() => { setIsLoginOpen(true); setIsSignUpOpen(false); }}
-        onOpenSignUp={() => { setIsSignUpOpen(true); setIsLoginOpen(false); }}
-        onCloseLogin={() => setIsLoginOpen(false)}
-        onCloseSignUp={() => setIsSignUpOpen(false)}
-        onAuthSuccess={handleLoginSuccess}
       >
         {children}
     </Layout>
   );
 
-  // View: Interactive Tools or Generated Content
+  // --- RENDER ---
+
+  // 1. Startup Permission Modal
+  if (showPermissionModal) {
+    return <StartupPermissionModal onComplete={() => setShowPermissionModal(false)} />;
+  }
+
+  // 2. Interactive Tools (ChatBot / LiveVoice)
   if (activeBook && activeUnit) {
-    // Render ChatBot for Unit 5-9
     if (activeUnit.id === '5-9') {
       return (
         <AppLayout showHomeButton={true}>
@@ -115,7 +99,6 @@ export default function App() {
       );
     }
 
-    // Render LiveVoice for Unit 5-10
     if (activeUnit.id === '5-10') {
       return (
         <AppLayout showHomeButton={true}>
@@ -124,7 +107,7 @@ export default function App() {
       );
     }
 
-    // Render Standard Unit
+    // 3. Standard Unit View
     if (unitContent) {
       return (
         <AppLayout showHomeButton={true}>
@@ -140,7 +123,7 @@ export default function App() {
     }
   }
 
-  // View: Book Details (Unit List)
+  // 4. Book Details (Unit List)
   if (activeBook) {
     return (
       <AppLayout showHomeButton={true}>
@@ -226,7 +209,7 @@ export default function App() {
     );
   }
 
-  // View: Library (Home)
+  // 5. Library (Home)
   return (
     <AppLayout showHomeButton={false}>
       <div className="max-w-4xl mx-auto py-12 text-center animate-fadeIn">

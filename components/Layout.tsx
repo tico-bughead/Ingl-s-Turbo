@@ -1,38 +1,16 @@
 import React, { ReactNode } from 'react';
-import { BookOpen, GraduationCap, Github, ExternalLink, LogIn, UserPlus, LogOut, User } from 'lucide-react';
-import { LoginModal, SignUpModal } from './AuthModals';
+import { BookOpen, GraduationCap, Github, ExternalLink } from 'lucide-react';
 
 interface LayoutProps {
   children: ReactNode;
   onGoHome: () => void;
   showHomeButton: boolean;
-  isLoggedIn?: boolean;
-  onLogout?: () => void;
-  
-  // Auth Modal State Props (passed from App)
-  isLoginOpen?: boolean;
-  isSignUpOpen?: boolean;
-  onCloseLogin?: () => void;
-  onCloseSignUp?: () => void;
-  onOpenLogin?: () => void;
-  onOpenSignUp?: () => void;
-  onAuthSuccess?: () => void;
 }
 
 const Layout: React.FC<LayoutProps> = ({ 
   children, 
   onGoHome, 
   showHomeButton,
-  isLoggedIn = false,
-  onLogout,
-  
-  isLoginOpen = false,
-  isSignUpOpen = false,
-  onCloseLogin = () => {},
-  onCloseSignUp = () => {},
-  onOpenLogin = () => {},
-  onOpenSignUp = () => {},
-  onAuthSuccess = () => {}
 }) => {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
@@ -57,45 +35,6 @@ const Layout: React.FC<LayoutProps> = ({
               <span className="sr-only">GitHub</span>
               <Github size={20} />
             </a>
-
-            {/* Divider */}
-            <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
-
-            {/* Auth Section */}
-            {isLoggedIn ? (
-              <div className="flex items-center gap-3 animate-fadeIn">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-sm">
-                    <User size={16} />
-                  </div>
-                  <span className="text-sm font-medium text-slate-700 hidden md:block">Francisco</span>
-                </div>
-                <button 
-                  onClick={onLogout}
-                  className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  title="Sair"
-                >
-                  <LogOut size={18} />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 sm:gap-3">
-                <button 
-                  onClick={onOpenLogin}
-                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors"
-                >
-                  <LogIn size={16} className="hidden sm:inline" />
-                  Entrar
-                </button>
-                <button 
-                  onClick={onOpenSignUp} 
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-all hover:shadow-md active:scale-95"
-                >
-                  <UserPlus size={16} className="hidden sm:inline" />
-                  Cadastrar
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </header>
@@ -146,26 +85,6 @@ const Layout: React.FC<LayoutProps> = ({
           </div>
         </div>
       </footer>
-
-      {/* Modals */}
-      <LoginModal 
-        isOpen={!!isLoginOpen} 
-        onClose={onCloseLogin} 
-        onSwitchToSignUp={() => {
-          onCloseLogin();
-          onOpenSignUp();
-        }}
-        onLoginSuccess={onAuthSuccess}
-      />
-      <SignUpModal 
-        isOpen={!!isSignUpOpen} 
-        onClose={onCloseSignUp}
-        onSwitchToLogin={() => {
-          onCloseSignUp();
-          onOpenLogin();
-        }}
-        onSignUpSuccess={onAuthSuccess}
-      />
     </div>
   );
 };
