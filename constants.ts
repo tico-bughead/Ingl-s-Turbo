@@ -73,11 +73,10 @@ export const BOOKS: BookDefinition[] = [
     id: 5,
     title: "AI Practice",
     subtitle: "Interactive Tools",
-    levelDescription: "Real-time Practice",
+    levelDescription: "AI Assisted Learning",
     color: "bg-pink-600",
     units: [
-      { id: "5-9", number: 1, title: "AI Chatbot Tutor", description: "Text-based conversation with an intelligent tutor (Gemini 3 Pro)." },
-      { id: "5-10", number: 2, title: "Live Conversation", description: "Real-time voice practice with AI (Gemini Live Audio)." }
+      { id: "5-9", number: 1, title: "AI Chatbot Tutor", description: "Text-based conversation with an intelligent tutor (Gemini 3 Pro)." }
     ]
   }
 ];

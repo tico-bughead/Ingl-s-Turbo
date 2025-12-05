@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { GeneratedUnitContent, UnitDefinition, BrickType, PronunciationResult } from '../types';
-import { Volume2, MessageCircle, BookOpen, CheckCircle, HelpCircle, Loader2, Play, Layers, Mic, Square, Send } from 'lucide-react';
+import { Volume2, MessageCircle, BookOpen, CheckCircle, HelpCircle, Loader2, Play, Layers, Mic, Square, Send, AlertCircle } from 'lucide-react';
 import { checkPronunciation } from '../services/geminiService';
 
 interface UnitViewProps {
@@ -82,6 +82,7 @@ const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplet
   // Speak & Repeat State
   const [activeSpeakIndex, setActiveSpeakIndex] = useState<number | null>(null);
   const [isRecording, setIsRecording] = useState(false);
+  const [recordingError, setRecordingError] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [pronunciationResult, setPronunciationResult] = useState<PronunciationResult | null>(null);
   const [isCheckingPronunciation, setIsCheckingPronunciation] = useState(false);
@@ -114,6 +115,7 @@ const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplet
       setActiveSpeakIndex(index);
       setAudioBlob(null);
       setPronunciationResult(null);
+      setRecordingError(null);
       
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       
@@ -141,9 +143,17 @@ const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplet
 
       mediaRecorder.start();
       setIsRecording(true);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error accessing microphone:", err);
-      alert("Could not access microphone. Please check permissions.");
+      setIsRecording(false);
+      
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setRecordingError("Permission denied. Please click the lock icon in your browser address bar to allow microphone access.");
+      } else if (err.name === 'NotFoundError') {
+        setRecordingError("No microphone found. Please connect a microphone.");
+      } else {
+        setRecordingError("Could not access microphone. Please check your system settings.");
+      }
     }
   };
 
@@ -157,6 +167,7 @@ const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplet
   const submitForFeedback = async (phrase: string) => {
     if (!audioBlob) return;
     setIsCheckingPronunciation(true);
+    setRecordingError(null);
     
     try {
       // Convert Blob to Base64
@@ -185,6 +196,7 @@ const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplet
     } catch (err) {
       console.error(err);
       setIsCheckingPronunciation(false);
+      setRecordingError("Failed to process audio.");
     }
   };
 
@@ -333,6 +345,16 @@ const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplet
         <SectionHeader icon={Mic} title="Speak & Repeat" colorClass={bookColor} />
         <p className="text-slate-600 mb-6">Listen to the model, record your voice, and get instant AI feedback on your pronunciation.</p>
         
+        {recordingError && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 animate-fadeIn">
+            <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+            <div className="text-sm text-red-800">
+              <p className="font-bold">Microphone Error</p>
+              <p>{recordingError}</p>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-6">
           {content.speakAndRepeat?.map((item, idx) => {
              const isActive = activeSpeakIndex === idx;

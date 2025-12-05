@@ -11,6 +11,10 @@ const StartupPermissionModal: React.FC<StartupPermissionModalProps> = ({ onCompl
   const requestMicrophone = async () => {
     setStatus('requesting');
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("MediaDevices API not supported");
+      }
+
       // Request access
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       
@@ -21,7 +25,8 @@ const StartupPermissionModal: React.FC<StartupPermissionModalProps> = ({ onCompl
       // Proceed to app
       onComplete();
     } catch (error) {
-      console.error("Mic permission denied", error);
+      // Use warn instead of error so it doesn't look like a crash
+      console.warn("Mic permission request failed or denied:", error);
       setStatus('denied');
     }
   };

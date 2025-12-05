@@ -5,9 +5,8 @@ import BookCard from './components/BookCard';
 import Layout from './components/Layout';
 import UnitView from './components/UnitView';
 import ChatBot from './components/ChatBot';
-import LiveVoice from './components/LiveVoice';
 import StartupPermissionModal from './components/StartupPermissionModal';
-import { Loader2, Lock, Play, CheckCircle2, ChevronRight, AlertTriangle, Sparkles, AudioLines } from 'lucide-react';
+import { Loader2, Lock, Play, CheckCircle2, ChevronRight, AlertTriangle, Sparkles, Laptop } from 'lucide-react';
 
 export default function App() {
   const [showPermissionModal, setShowPermissionModal] = useState(true);
@@ -62,8 +61,8 @@ export default function App() {
     setActiveUnit(unit);
     
     // Special Interactive Units Handling
-    // 5-9 is Text Chat, 5-10 is Live Voice
-    if (unit.id === '5-9' || unit.id === '5-10') {
+    // 5-9 is Text Chat
+    if (unit.id === '5-9') {
       return; // Stop here, rendering logic handles the view
     }
 
@@ -89,20 +88,12 @@ export default function App() {
     return <StartupPermissionModal onComplete={() => setShowPermissionModal(false)} />;
   }
 
-  // 2. Interactive Tools (ChatBot / LiveVoice)
+  // 2. Interactive Tools (ChatBot)
   if (activeBook && activeUnit) {
     if (activeUnit.id === '5-9') {
       return (
         <AppLayout showHomeButton={true}>
           <ChatBot onBack={handleBackToUnits} />
-        </AppLayout>
-      );
-    }
-
-    if (activeUnit.id === '5-10') {
-      return (
-        <AppLayout showHomeButton={true}>
-          <LiveVoice onBack={handleBackToUnits} />
         </AppLayout>
       );
     }
@@ -154,7 +145,7 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {activeBook.units.map((unit) => {
               const isCompleted = completedUnits.includes(unit.id);
-              const isSpecial = unit.id === '5-9' || unit.id === '5-10';
+              const isSpecial = unit.id === '5-9';
               
               return (
                 <div 
@@ -184,8 +175,7 @@ export default function App() {
                           ? 'bg-green-100 text-green-700'
                           : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200'}
                     `}>
-                      {isSpecial && unit.id === '5-9' && <Sparkles size={18} />}
-                      {isSpecial && unit.id === '5-10' && <AudioLines size={18} />}
+                      {isSpecial && <Sparkles size={18} />}
                       {!isSpecial && unit.number}
                     </span>
                   </div>
@@ -216,9 +206,22 @@ export default function App() {
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 serif tracking-tight">
           Master English with <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">AI-Powered</span> Books
         </h1>
-        <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-16">
+        <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-10">
           Select a level below to generate personalized, interactive e-books designed specifically for Portuguese speakers. Based on the proven Interchange method.
         </p>
+
+        {/* Desktop Recommendation Notice */}
+        <div className="mx-auto max-w-lg bg-blue-50 border border-blue-100 rounded-xl p-4 mb-16 flex items-start gap-4 text-left shadow-sm">
+           <div className="bg-blue-100 p-2 rounded-lg text-blue-600 mt-1">
+             <Laptop size={20} />
+           </div>
+           <div>
+             <h3 className="font-bold text-blue-800 text-sm">Dica de Uso</h3>
+             <p className="text-sm text-blue-700 leading-relaxed">
+               Para garantir a melhor precisão nos exercícios de fala e reconhecimento de voz, recomendamos o uso de um computador (Desktop ou Notebook).
+             </p>
+           </div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
           {BOOKS.map((book) => (
