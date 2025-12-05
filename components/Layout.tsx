@@ -53,7 +53,7 @@ const Layout: React.FC<LayoutProps> = ({
           
           <div className="flex items-center gap-4">
             {/* Social Links */}
-            <a href="https://github.com/tico-bughead" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-800 transition-colors hidden sm:block">
+            <a href="https://github.com/tico-bughead/inglesturboai" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-800 transition-colors hidden sm:block">
               <span className="sr-only">GitHub</span>
               <Github size={20} />
             </a>
