@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenAI, LiveServerMessage, Modality, Blob } from '@google/genai';
 import { Mic, MicOff, Volume2, Radio, Loader2, AlertTriangle, CheckCircle, MessageSquare } from 'lucide-react';
-import { checkPronunciation } from '../services/geminiService'; // Re-using for structure, but we'll do a custom call here
 
 interface LiveVoiceProps {
   onBack: () => void;

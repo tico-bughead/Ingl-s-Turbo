@@ -9,7 +9,6 @@ interface UnitViewProps {
   onBack: () => void;
   onComplete: () => void;
   bookColor: string;
-  apiKey?: string;
 }
 
 const SectionHeader: React.FC<{ icon: React.ElementType, title: string, colorClass: string }> = ({ icon: Icon, title, colorClass }) => (
@@ -76,7 +75,7 @@ const getBrickLabel = (type: BrickType): string => {
   return BRICK_TRANSLATIONS[type] || type;
 };
 
-const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplete, bookColor, apiKey }) => {
+const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplete, bookColor }) => {
   const [quizAnswers, setQuizAnswers] = useState<number[]>(new Array(content.quiz.length).fill(-1));
   const [showExplanation, setShowExplanation] = useState<boolean[]>(new Array(content.quiz.length).fill(false));
 
