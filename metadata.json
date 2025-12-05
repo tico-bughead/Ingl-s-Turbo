@@ -1,0 +1,7 @@
+{
+  "name": "Inglês Turbo AI",
+  "description": "An AI-powered English course generator for Portuguese speakers, featuring 4 levels of interactive e-books generated on-demand using Gemini.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
