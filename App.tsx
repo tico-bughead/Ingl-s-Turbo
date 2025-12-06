@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BOOKS, getStaticUnitContent } from './constants';
 import { BookDefinition, UnitDefinition, GeneratedUnitContent } from './types';
 import BookCard from './components/BookCard';
 import Layout from './components/Layout';
 import UnitView from './components/UnitView';
-import ChatBot from './components/ChatBot';
-import StartupPermissionModal from './components/StartupPermissionModal';
-import { Loader2, Lock, Play, CheckCircle2, ChevronRight, AlertTriangle, Sparkles, Laptop } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Sparkles } from 'lucide-react';
 
 export default function App() {
-  const [showPermissionModal, setShowPermissionModal] = useState(true);
   const [activeBook, setActiveBook] = useState<BookDefinition | null>(null);
   const [activeUnit, setActiveUnit] = useState<UnitDefinition | null>(null);
   const [unitContent, setUnitContent] = useState<GeneratedUnitContent | null>(null);
-  const [loading, setLoading] = useState(false);
   
   // Track completed units with persistence
   const [completedUnits, setCompletedUnits] = useState<string[]>(() => {
@@ -60,12 +56,6 @@ export default function App() {
 
     setActiveUnit(unit);
     
-    // Special Interactive Units Handling
-    // 5-9 is Text Chat
-    if (unit.id === '5-9') {
-      return; // Stop here, rendering logic handles the view
-    }
-
     // Load static content immediately
     const content = getStaticUnitContent(unit.id, unit.title, unit.description);
     setUnitContent(content);
@@ -83,38 +73,22 @@ export default function App() {
 
   // --- RENDER ---
 
-  // 1. Startup Permission Modal
-  if (showPermissionModal) {
-    return <StartupPermissionModal onComplete={() => setShowPermissionModal(false)} />;
+  // 1. Unit View (Handles Standard and Special Gemini Guide Units)
+  if (activeBook && activeUnit && unitContent) {
+    return (
+      <AppLayout showHomeButton={true}>
+        <UnitView 
+          unitDef={activeUnit} 
+          content={unitContent} 
+          onBack={handleBackToUnits}
+          onComplete={handleMarkComplete}
+          bookColor={activeBook.color} 
+        />
+      </AppLayout>
+    );
   }
 
-  // 2. Interactive Tools (ChatBot)
-  if (activeBook && activeUnit) {
-    if (activeUnit.id === '5-9') {
-      return (
-        <AppLayout showHomeButton={true}>
-          <ChatBot onBack={handleBackToUnits} />
-        </AppLayout>
-      );
-    }
-
-    // 3. Standard Unit View
-    if (unitContent) {
-      return (
-        <AppLayout showHomeButton={true}>
-          <UnitView 
-            unitDef={activeUnit} 
-            content={unitContent} 
-            onBack={handleBackToUnits}
-            onComplete={handleMarkComplete}
-            bookColor={activeBook.color} 
-          />
-        </AppLayout>
-      );
-    }
-  }
-
-  // 4. Book Details (Unit List)
+  // 2. Book Details (Unit List)
   if (activeBook) {
     return (
       <AppLayout showHomeButton={true}>
@@ -145,7 +119,7 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {activeBook.units.map((unit) => {
               const isCompleted = completedUnits.includes(unit.id);
-              const isSpecial = unit.id === '5-9';
+              const isSpecial = unit.id === '5-1';
               
               return (
                 <div 
@@ -188,7 +162,7 @@ export default function App() {
                   </p>
 
                   <div className="flex items-center text-sm font-semibold text-slate-400 group-hover:text-indigo-600 transition-colors">
-                    {isSpecial ? 'Launch Tool' : (isCompleted ? 'Review Unit' : 'Start Lesson')} <ChevronRight size={16} className="ml-1" />
+                    {isSpecial ? 'Open Guide' : (isCompleted ? 'Review Unit' : 'Start Lesson')} <ChevronRight size={16} className="ml-1" />
                   </div>
                 </div>
               );
@@ -199,29 +173,16 @@ export default function App() {
     );
   }
 
-  // 5. Library (Home)
+  // 3. Library (Home)
   return (
     <AppLayout showHomeButton={false}>
       <div className="max-w-4xl mx-auto py-12 text-center animate-fadeIn">
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 serif tracking-tight">
           Master English with <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">AI-Powered</span> Books
         </h1>
-        <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-10">
+        <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-16">
           Select a level below to generate personalized, interactive e-books designed specifically for Portuguese speakers. Based on the proven Interchange method.
         </p>
-
-        {/* Desktop Recommendation Notice */}
-        <div className="mx-auto max-w-lg bg-blue-50 border border-blue-100 rounded-xl p-4 mb-16 flex items-start gap-4 text-left shadow-sm">
-           <div className="bg-blue-100 p-2 rounded-lg text-blue-600 mt-1">
-             <Laptop size={20} />
-           </div>
-           <div>
-             <h3 className="font-bold text-blue-800 text-sm">Dica de Uso</h3>
-             <p className="text-sm text-blue-700 leading-relaxed">
-               Para garantir a melhor precisão nos exercícios de fala e reconhecimento de voz, recomendamos o uso de um computador (Desktop ou Notebook).
-             </p>
-           </div>
-        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
           {BOOKS.map((book) => (

@@ -94,6 +94,11 @@ export interface PronunciationResult {
 
 export interface GeneratedUnitContent {
   introText: string;
+  externalLink?: {
+    url: string;
+    label: string;
+    description: string;
+  };
   vocabulary: VocabularyItem[];
   grammarTitle: string;
   grammar: GrammarSection;

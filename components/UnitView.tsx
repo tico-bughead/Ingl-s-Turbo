@@ -1,7 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { GeneratedUnitContent, UnitDefinition, BrickType, PronunciationResult } from '../types';
-import { Volume2, MessageCircle, BookOpen, CheckCircle, HelpCircle, Loader2, Play, Layers, Mic, Square, Send, AlertCircle } from 'lucide-react';
-import { checkPronunciation } from '../services/geminiService';
+import React, { useState } from 'react';
+import { GeneratedUnitContent, UnitDefinition, BrickType } from '../types';
+import { Volume2, MessageCircle, BookOpen, CheckCircle, HelpCircle, Play, Layers, Mic, ExternalLink } from 'lucide-react';
 
 interface UnitViewProps {
   unitDef: UnitDefinition;
@@ -79,16 +78,6 @@ const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplet
   const [quizAnswers, setQuizAnswers] = useState<number[]>(new Array(content.quiz.length).fill(-1));
   const [showExplanation, setShowExplanation] = useState<boolean[]>(new Array(content.quiz.length).fill(false));
 
-  // Speak & Repeat State
-  const [activeSpeakIndex, setActiveSpeakIndex] = useState<number | null>(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingError, setRecordingError] = useState<string | null>(null);
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-  const [pronunciationResult, setPronunciationResult] = useState<PronunciationResult | null>(null);
-  const [isCheckingPronunciation, setIsCheckingPronunciation] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
-
   const handleQuizSelect = (qIndex: number, optionIndex: number) => {
     if (quizAnswers[qIndex] !== -1) return; // Prevent changing after selection
     const newAnswers = [...quizAnswers];
@@ -106,97 +95,6 @@ const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplet
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
       window.speechSynthesis.speak(utterance);
-    }
-  };
-
-  // Recording Logic
-  const startRecording = async (index: number) => {
-    try {
-      setActiveSpeakIndex(index);
-      setAudioBlob(null);
-      setPronunciationResult(null);
-      setRecordingError(null);
-      
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
-      // Determine mime type
-      let mimeType = 'audio/webm';
-      if (MediaRecorder.isTypeSupported('audio/webm')) mimeType = 'audio/webm';
-      else if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4'; // Safari
-      
-      const mediaRecorder = new MediaRecorder(stream, { mimeType });
-      mediaRecorderRef.current = mediaRecorder;
-      chunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          chunksRef.current.push(e.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: mimeType });
-        setAudioBlob(blob);
-        // Stop all tracks to release mic
-        stream.getTracks().forEach(track => track.stop());
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-    } catch (err: any) {
-      console.error("Error accessing microphone:", err);
-      setIsRecording(false);
-      
-      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        setRecordingError("Permission denied. Please click the lock icon in your browser address bar to allow microphone access.");
-      } else if (err.name === 'NotFoundError') {
-        setRecordingError("No microphone found. Please connect a microphone.");
-      } else {
-        setRecordingError("Could not access microphone. Please check your system settings.");
-      }
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-    }
-  };
-
-  const submitForFeedback = async (phrase: string) => {
-    if (!audioBlob) return;
-    setIsCheckingPronunciation(true);
-    setRecordingError(null);
-    
-    try {
-      // Convert Blob to Base64
-      const reader = new FileReader();
-      reader.readAsDataURL(audioBlob);
-      reader.onloadend = async () => {
-        const base64data = reader.result as string;
-        // Remove data URL prefix (e.g., "data:audio/webm;base64,")
-        const base64Content = base64data.split(',')[1];
-        const mimeType = base64data.split(';')[0].split(':')[1];
-        
-        try {
-          const result = await checkPronunciation(base64Content, phrase, mimeType);
-          setPronunciationResult(result);
-        } catch (error) {
-           console.error("Feedback failed", error);
-           setPronunciationResult({
-             score: 0,
-             feedback: "Connection error. Please try again.",
-             strengths: "",
-             improvements: ""
-           });
-        }
-        setIsCheckingPronunciation(false);
-      };
-    } catch (err) {
-      console.error(err);
-      setIsCheckingPronunciation(false);
-      setRecordingError("Failed to process audio.");
     }
   };
 
@@ -226,6 +124,27 @@ const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplet
           <p className="text-lg text-slate-600 leading-relaxed max-w-2xl">
             {content.introText}
           </p>
+          
+          {/* External Link Card (e.g. for Gliglish) */}
+          {content.externalLink && (
+             <div className="mt-8 bg-slate-50 border border-indigo-200 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+                <div>
+                   <h3 className="font-bold text-slate-900 text-lg flex items-center gap-2">
+                     <span className="bg-indigo-600 text-white p-1 rounded-md"><ExternalLink size={16} /></span>
+                     {content.externalLink.label}
+                   </h3>
+                   <p className="text-slate-500 text-sm mt-1">{content.externalLink.description}</p>
+                </div>
+                <a 
+                  href={content.externalLink.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-md hover:shadow-lg active:scale-95 flex items-center gap-2 whitespace-nowrap"
+                >
+                   Open Now <ExternalLink size={18} />
+                </a>
+             </div>
+          )}
         </div>
       </div>
 
@@ -343,105 +262,30 @@ const UnitView: React.FC<UnitViewProps> = ({ unitDef, content, onBack, onComplet
       {/* Speak & Repeat Section */}
       <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 mb-8 break-inside-avoid">
         <SectionHeader icon={Mic} title="Speak & Repeat" colorClass={bookColor} />
-        <p className="text-slate-600 mb-6">Listen to the model, record your voice, and get instant AI feedback on your pronunciation.</p>
+        <p className="text-slate-600 mb-6">Listen to the model and practice speaking aloud to improve your pronunciation.</p>
         
-        {recordingError && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 animate-fadeIn">
-            <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
-            <div className="text-sm text-red-800">
-              <p className="font-bold">Microphone Error</p>
-              <p>{recordingError}</p>
-            </div>
-          </div>
-        )}
-
-        <div className="space-y-6">
+        <div className="space-y-4">
           {content.speakAndRepeat?.map((item, idx) => {
-             const isActive = activeSpeakIndex === idx;
-             const hasResult = isActive && pronunciationResult;
-             
              return (
-              <div key={idx} className={`border rounded-xl p-5 transition-all break-inside-avoid ${isActive ? 'ring-2 ring-indigo-100 border-indigo-200 bg-indigo-50/20' : 'border-slate-200 bg-white'}`}>
-                 <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4">
+              <div key={idx} className={`border rounded-xl p-5 border-slate-200 bg-white transition-all hover:border-indigo-200 hover:bg-slate-50 break-inside-avoid`}>
+                 <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="text-xl font-bold text-slate-800">{item.text}</h3>
-                        <button 
-                           onClick={() => handlePlayAudio(item.text)}
-                           className="p-1.5 rounded-full text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-colors"
-                        >
-                          <Volume2 size={18} />
-                        </button>
                       </div>
                       <p className="text-slate-500 italic text-sm">{item.translation}</p>
                       <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Focus: {item.focus}</p>
                     </div>
 
                     <div className="flex items-center gap-3">
-                       {isActive && isRecording ? (
-                         <button 
-                           onClick={stopRecording}
-                           className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full font-medium transition-colors animate-pulse"
-                         >
-                           <Square size={16} fill="currentColor" /> Stop
-                         </button>
-                       ) : (
-                         <button 
-                           onClick={() => startRecording(idx)}
-                           className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-full font-medium transition-colors"
-                         >
-                           <Mic size={16} /> {isActive && audioBlob ? 'Re-record' : 'Record'}
-                         </button>
-                       )}
+                        <button 
+                           onClick={() => handlePlayAudio(item.text)}
+                           className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-full font-medium transition-colors"
+                        >
+                          <Volume2 size={18} /> Listen
+                        </button>
                     </div>
                  </div>
-
-                 {/* Recording Playback & Submit Area */}
-                 {isActive && audioBlob && !isRecording && (
-                   <div className="mt-4 pt-4 border-t border-slate-200 animate-fadeIn">
-                     <div className="flex items-center gap-4 mb-3">
-                        <audio src={URL.createObjectURL(audioBlob)} controls className="h-8 w-full max-w-xs" />
-                        <button 
-                          onClick={() => submitForFeedback(item.text)}
-                          disabled={isCheckingPronunciation}
-                          className="flex items-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
-                        >
-                          {isCheckingPronunciation ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                          Check Pronunciation
-                        </button>
-                     </div>
-
-                     {/* Feedback Result */}
-                     {hasResult && (
-                       <div className="bg-white rounded-lg border border-slate-200 p-4 mt-4 animate-fadeIn">
-                          <div className="flex items-center gap-4 mb-3">
-                            <div className={`flex flex-col items-center justify-center w-14 h-14 rounded-full border-4 flex-shrink-0 ${
-                              pronunciationResult.score >= 80 ? 'border-green-500 text-green-700 bg-green-50' : 
-                              pronunciationResult.score >= 60 ? 'border-amber-500 text-amber-700 bg-amber-50' : 
-                              'border-red-500 text-red-700 bg-red-50'
-                            }`}>
-                               <span className="text-xl font-bold">{pronunciationResult.score}</span>
-                            </div>
-                            <div>
-                               <h4 className="font-bold text-slate-800">AI Feedback</h4>
-                               <p className="text-sm text-slate-600">{pronunciationResult.feedback}</p>
-                            </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-                            <div className="bg-green-50 border border-green-100 p-3 rounded-lg text-sm">
-                               <strong className="text-green-800 block mb-1">Strengths:</strong>
-                               <span className="text-green-700">{pronunciationResult.strengths || "Good effort!"}</span>
-                            </div>
-                            <div className="bg-amber-50 border border-amber-100 p-3 rounded-lg text-sm">
-                               <strong className="text-amber-800 block mb-1">To Improve:</strong>
-                               <span className="text-amber-700">{pronunciationResult.improvements || "Keep practicing."}</span>
-                            </div>
-                          </div>
-                       </div>
-                     )}
-                   </div>
-                 )}
               </div>
              );
           })}
