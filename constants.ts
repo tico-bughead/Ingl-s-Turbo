@@ -117,11 +117,11 @@ export const BOOKS: BookDefinition[] = [
 
 // --- STATIC CONTENT GENERATOR ---
 
-const createContent = (overrides: Partial<GeneratedUnitContent>): GeneratedUnitContent => ({
-  introText: "Welcome to this unit.",
+export const createContent = (overrides: Partial<GeneratedUnitContent>): GeneratedUnitContent => ({
+  introText: "Welcome to this unit. Study the vocabulary and grammar below.",
   vocabulary: [],
   grammarTitle: "Grammar Focus",
-  grammar: { introduction: "", structures: [], tables: [] },
+  grammar: { introduction: "Review the rules below.", structures: [], tables: [] },
   dialogue: [],
   speakAndRepeat: [],
   quiz: [],
@@ -599,453 +599,355 @@ const PREDEFINED_UNITS: Record<string, GeneratedUnitContent> = {
           label: "Negative (Don't/Doesn't)",
           fullSentence: "He doesn't drive to work.",
           meaning: "Ele não dirige para o trabalho.",
-          bricks: [ { text: "He", type: "subject" }, { text: "doesn't", type: "auxiliary" }, { text: "drive", type: "verb" }, { text: "to work", type: "noun" } ]
+          bricks: [ { text: "He", type: "subject" }, { text: "doesn't", type: "auxiliary" }, { text: "drive", type: "verb" }, { text: "to work", type: "preposition" } ]
         },
         {
           label: "Question (Do/Does)",
           fullSentence: "Does she live here?",
           meaning: "Ela mora aqui?",
-          bricks: [ { text: "Does", type: "auxiliary" }, { text: "she", type: "subject" }, { text: "live", type: "verb" }, { text: "here", type: "adverb" }, { text: "?", type: "other" } ]
+          bricks: [ { text: "Does", type: "auxiliary" }, { text: "she", type: "subject" }, { text: "live", type: "verb" }, { text: "here", type: "adverb" } ]
         }
       ],
       tables: [
         {
-          title: "Simple Present Rules",
-          headers: ["Subject", "Affirmative", "Negative", "Question"],
+          title: "Simple Present Endings",
+          headers: ["Subject", "Verb (Work)", "Verb (Study)"],
           rows: [
-            ["I / You / We / They", "Work", "Don't work", "Do... work?"],
-            ["He / She / It", "Works", "Doesn't work", "Does... work?"]
+            ["I/You/We/They", "work", "study"],
+            ["He/She/It", "works", "studies (remove y + ies)"]
           ]
         },
         {
-          title: "Spelling Rules (3rd Person)",
-          headers: ["Ending", "Rule", "Example"],
-          rows: [
-            ["Consonant", "Add -s", "Walks"],
-            ["-ch, -sh, -s, -x", "Add -es", "Watches, Washes"],
-            ["Consonant + y", "Remove y, add -ies", "Study -> Studies"]
-          ]
+            title: "Questions",
+            headers: ["Auxiliary", "Subject", "Verb"],
+            rows: [
+                ["Do", "you", "work?"],
+                ["Does", "he", "work?"]
+            ]
         }
       ]
     },
     dialogue: [
-      { speaker: "Jack", text: "Does your wife work?", translation: "Sua esposa trabalha?" },
-      { speaker: "Tom", text: "Yes, she does. She's a teacher.", translation: "Sim, trabalha. Ela é professora." },
-      { speaker: "Jack", text: "Where does she teach?", translation: "Onde ela ensina?" },
-      { speaker: "Tom", text: "She teaches at the high school downtown.", translation: "Ela ensina na escola de ensino médio no centro." }
+      { speaker: "Jack", text: "So, do you live downtown, David?", translation: "Então, você mora no centro, David?" },
+      { speaker: "David", text: "Yes, I live with my brother. He works near here.", translation: "Sim, eu moro com meu irmão. Ele trabalha perto daqui." },
+      { speaker: "Jack", text: "Oh, what does he do?", translation: "Ah, o que ele faz?" },
+      { speaker: "David", text: "He is a waiter.", translation: "Ele é garçom." }
     ],
     speakAndRepeat: [
-      { text: "She works in a hotel.", translation: "Ela trabalha em um hotel.", focus: "Final 's' sound" },
-      { text: "Do you like your job?", translation: "Você gosta do seu trabalho?", focus: "Intonation" },
-      { text: "He doesn't have a car.", translation: "Ele não tem carro.", focus: "Doesn't pronunciation" }
+      { text: "He works in a bank.", translation: "Ele trabalha em um banco.", focus: "S ending sound" },
+      { text: "Does she have a car?", translation: "Ela tem um carro?", focus: "Question intonation" }
     ],
     quiz: [
-      { question: "My brother ___ to school.", options: ["go", "goes", "going"], correctAnswer: 1, explanation: "3ª pessoa do singular (He) requer 'es' no final de 'go'." },
-      { question: "___ they live near here?", options: ["Do", "Does", "Are"], correctAnswer: 0, explanation: "Para 'they', usamos o auxiliar 'Do'." }
+      { question: "My father ___ at night.", options: ["work", "works", "working"], correctAnswer: 1, explanation: "3ª pessoa do singular (He) requer 's'." },
+      { question: "___ you like pizza?", options: ["Does", "Are", "Do"], correctAnswer: 2, explanation: "Para 'You', usamos o auxiliar 'Do'." }
     ]
   }),
 
-  // Unit 1-7: Does it have a view? (House & Furniture)
-  "1-7": createContent({
-    introText: "Vamos descrever casas, apartamentos e móveis, usando 'Does it have...?' e 'There is/are'.",
+  // Unit 1-13: May I take your order? (Restaurants/Modals)
+  "1-13": createContent({
+    introText: "Nesta unidade, aprenderemos como fazer pedidos em restaurantes, oferecer algo e entender o cardápio usando verbos modais como May, Could e Can.",
     vocabulary: [
-      { word: "View", translation: "Vista", example: "The apartment has a nice view.", exampleMeaning: "O apartamento tem uma vista legal." },
-      { word: "Kitchen", translation: "Cozinha", example: "The fridge is in the kitchen.", exampleMeaning: "A geladeira está na cozinha." },
-      { word: "Bedroom", translation: "Quarto", example: "There are two bedrooms.", exampleMeaning: "Há dois quartos." },
-      { word: "Floor", translation: "Chão/Andar", example: "I live on the first floor.", exampleMeaning: "Eu moro no primeiro andar." },
-      { word: "Furniture", translation: "Mobília", example: "I need new furniture.", exampleMeaning: "Preciso de mobília nova." }
+      { word: "Menu", translation: "Cardápio", example: "Can I see the menu?", exampleMeaning: "Posso ver o cardápio?" },
+      { word: "Order", translation: "Pedido/Pedir", example: "Are you ready to order?", exampleMeaning: "Estão prontos para pedir?" },
+      { word: "Appetizer", translation: "Entrada/Aperitivo", example: "I'd like soup as an appetizer.", exampleMeaning: "Eu gostaria de sopa como entrada." },
+      { word: "Main dish", translation: "Prato principal", example: "For the main dish, I want steak.", exampleMeaning: "Para o prato principal, quero bife." },
+      { word: "Check/Bill", translation: "Conta", example: "Can we have the check, please?", exampleMeaning: "Pode nos trazer a conta, por favor?" }
     ],
-    grammarTitle: "Simple Present Questions (It)",
+    grammarTitle: "Modals (May/Can/Could)",
     grammar: {
-      introduction: "Ao descrever lugares, frequentemente usamos 'It' (ele/ela para coisas). As perguntas usam 'Does'.",
+      introduction: "Usamos verbos modais para fazer pedidos educados. 'May' é muito formal, 'Could' é formal e 'Can' é informal/neutro.",
       structures: [
         {
-          label: "Does it have...?",
-          fullSentence: "Does the house have a yard?",
-          meaning: "A casa tem um quintal?",
-          bricks: [ { text: "Does", type: "auxiliary" }, { text: "the house", type: "subject" }, { text: "have", type: "verb" }, { text: "a yard", type: "object" } ]
+          label: "Ordering (I'll have...)",
+          fullSentence: "I'll have the pasta.",
+          meaning: "Eu vou querer a massa.",
+          bricks: [ { text: "I'll", type: "subject" }, { text: "have", type: "verb" }, { text: "the pasta", type: "object" } ]
         },
         {
-          label: "Short Answer",
-          fullSentence: "Yes, it does.",
-          meaning: "Sim, tem.",
-          bricks: [ { text: "Yes", type: "other" }, { text: "it", type: "subject" }, { text: "does", type: "auxiliary" } ]
+          label: "Request (Can/Could)",
+          fullSentence: "Could you bring water?",
+          meaning: "Você poderia trazer água?",
+          bricks: [ { text: "Could", type: "auxiliary" }, { text: "you", type: "subject" }, { text: "bring", type: "verb" }, { text: "water", type: "object" } ]
         },
         {
-          label: "Negative Answer",
-          fullSentence: "No, it doesn't.",
-          meaning: "Não, não tem.",
-          bricks: [ { text: "No", type: "other" }, { text: "it", type: "subject" }, { text: "doesn't", type: "auxiliary" } ]
+          label: "Polite Offer (Would like)",
+          fullSentence: "Would you like dessert?",
+          meaning: "Você gostaria de sobremesa?",
+          bricks: [ { text: "Would", type: "auxiliary" }, { text: "you", type: "subject" }, { text: "like", type: "verb" }, { text: "dessert", type: "object" } ]
         }
       ],
       tables: [
         {
-          title: "Describing Quantity",
-          headers: ["Phrase", "Usage"],
+          title: "Polite Requests",
+          headers: ["Modal", "Usage Level", "Example"],
           rows: [
-            ["There is a...", "Singular (Tem um...)"],
-            ["There are some...", "Plural (Tem alguns...)"],
-            ["There aren't any...", "Negative Plural (Não tem nenhum...)"]
+            ["Can", "Informal", "Can I have soda?"],
+            ["Could", "Formal", "Could I have soda?"],
+            ["May", "Very Formal", "May I have soda?"]
+          ]
+        },
+        {
+          title: "Would like vs Like",
+          headers: ["Phrase", "Meaning"],
+          rows: [
+            ["I like pizza", "General preference (Eu gosto)"],
+            ["I'd like pizza", "Specific desire now (Eu gostaria/Quero)"]
           ]
         }
       ]
     },
     dialogue: [
-      { speaker: "Agent", text: "This apartment is great.", translation: "Este apartamento é ótimo." },
-      { speaker: "Client", text: "Does it have a balcony?", translation: "Ele tem varanda?" },
-      { speaker: "Agent", text: "Yes, it does. And it has a view of the park.", translation: "Sim, tem. E tem vista para o parque." },
-      { speaker: "Client", text: "That sounds perfect.", translation: "Parece perfeito." }
+      { speaker: "Waiter", text: "May I take your order?", translation: "Posso anotar seu pedido?" },
+      { speaker: "Customer", text: "Yes, I'd like the chicken sandwich, please.", translation: "Sim, eu gostaria do sanduíche de frango, por favor." },
+      { speaker: "Waiter", text: "Would you like anything to drink?", translation: "Gostaria de algo para beber?" },
+      { speaker: "Customer", text: "Yes, I'll have an iced tea.", translation: "Sim, vou querer um chá gelado." }
     ],
     speakAndRepeat: [
-      { text: "Does it have a garage?", translation: "Tem garagem?", focus: "Linking (Does-it)" },
-      { text: "There's a big window.", translation: "Tem uma janela grande.", focus: "Contraction There's" }
+      { text: "I'd like the check, please.", translation: "Eu gostaria da conta, por favor.", focus: "Contraction 'I'd' (I would)" },
+      { text: "Could I have some water?", translation: "Poderia me dar um pouco de água?", focus: "Polite intonation" }
     ],
     quiz: [
-      { question: "___ the apartment have a view?", options: ["Do", "Does", "Is"], correctAnswer: 1, explanation: "O sujeito é 'the apartment' (it), então usamos 'Does'." },
-      { question: "There aren't ___ chairs.", options: ["some", "any", "a"], correctAnswer: 1, explanation: "Em frases negativas no plural, usamos 'any'." }
+      { question: "___ I take your order?", options: ["Do", "May", "Am"], correctAnswer: 1, explanation: "May é o modal correto para oferecer serviço formalmente." },
+      { question: "I ___ like a salad, please.", options: ["would", "do", "am"], correctAnswer: 0, explanation: "Would like (Gostaria) é a forma educada de pedir." }
     ]
   }),
 
-  // Unit 1-8: Job skills (Can/Can't)
-  "1-8": createContent({
-    introText: "Nesta unidade, falamos sobre talentos e habilidades usando 'Can' e 'Can't'.",
+  // Unit 1-14: The biggest and the best! (Past/Irregular Verbs)
+  "1-14": createContent({
+    introText: "Vamos falar sobre viagens, férias e clima no passado, usando o Simple Past com verbos irregulares.",
     vocabulary: [
-      { word: "Skill", translation: "Habilidade", example: "Singing is a skill.", exampleMeaning: "Cantar é uma habilidade." },
-      { word: "Fix", translation: "Consertar", example: "I can fix cars.", exampleMeaning: "Eu sei consertar carros." },
-      { word: "Draw", translation: "Desenhar", example: "She draws very well.", exampleMeaning: "Ela desenha muito bem." },
-      { word: "Sing", translation: "Cantar", example: "Can you sing?", exampleMeaning: "Você sabe cantar?" },
-      { word: "Drive", translation: "Dirigir", example: "He can't drive.", exampleMeaning: "Ele não sabe dirigir." }
+      { word: "Vacation", translation: "Férias", example: "How was your vacation?", exampleMeaning: "Como foram suas férias?" },
+      { word: "Bought", translation: "Comprou (Buy)", example: "I bought a souvenir.", exampleMeaning: "Eu comprei uma lembrancinha." },
+      { word: "Went", translation: "Foi (Go)", example: "We went to the beach.", exampleMeaning: "Nós fomos para a praia." },
+      { word: "Ate", translation: "Comeu (Eat)", example: "I ate fish.", exampleMeaning: "Eu comi peixe." },
+      { word: "Sunny", translation: "Ensolarado", example: "It was sunny all day.", exampleMeaning: "Estava ensolarado o dia todo." }
     ],
-    grammarTitle: "Modals: Can & Can't",
+    grammarTitle: "Simple Past (Irregular Verbs)",
     grammar: {
-      introduction: "'Can' expressa habilidade ou possibilidade. O verbo principal nunca muda (sem 'to', sem 's').",
+      introduction: "Muitos verbos comuns em inglês são irregulares no passado. Eles não terminam em -ed, eles mudam completamente.",
       structures: [
         {
-          label: "Affirmative",
-          fullSentence: "I can swim.",
-          meaning: "Eu sei nadar.",
-          bricks: [ { text: "I", type: "subject" }, { text: "can", type: "auxiliary" }, { text: "swim", type: "verb" } ]
+          label: "Affirmative (Irregular)",
+          fullSentence: "We went to Paris.",
+          meaning: "Nós fomos para Paris.",
+          bricks: [ { text: "We", type: "subject" }, { text: "went", type: "verb" }, { text: "to Paris", type: "preposition" } ]
         },
         {
-          label: "Negative",
-          fullSentence: "She can't cook.",
-          meaning: "Ela não sabe cozinhar.",
-          bricks: [ { text: "She", type: "subject" }, { text: "can't", type: "auxiliary" }, { text: "cook", type: "verb" } ]
+          label: "Negative (Didn't)",
+          fullSentence: "I didn't buy anything.",
+          meaning: "Eu não comprei nada.",
+          bricks: [ { text: "I", type: "subject" }, { text: "didn't", type: "auxiliary" }, { text: "buy", type: "verb" }, { text: "anything", type: "object" } ]
         },
         {
-          label: "Question",
-          fullSentence: "Can you dance?",
-          meaning: "Você sabe dançar?",
-          bricks: [ { text: "Can", type: "auxiliary" }, { text: "you", type: "subject" }, { text: "dance", type: "verb" }, { text: "?", type: "other" } ]
+          label: "Question (Did)",
+          fullSentence: "Did you have fun?",
+          meaning: "Você se divertiu?",
+          bricks: [ { text: "Did", type: "auxiliary" }, { text: "you", type: "subject" }, { text: "have", type: "verb" }, { text: "fun", type: "noun" } ]
         }
       ],
       tables: [
         {
-          title: "Can Rules",
-          headers: ["Rule", "Correct", "Incorrect"],
+          title: "Common Irregular Verbs",
+          headers: ["Present", "Past"],
           rows: [
-            ["No 'to' after can", "I can go", "I can to go"],
-            ["No 's' for He/She", "She can sing", "She cans sing"]
+            ["Go", "Went"],
+            ["Buy", "Bought"],
+            ["Eat", "Ate"],
+            ["Have", "Had"],
+            ["See", "Saw"],
+            ["Do", "Did"]
+          ]
+        },
+        {
+          title: "Past of Be",
+          headers: ["Subject", "Was/Were"],
+          rows: [
+            ["I / He / She / It", "was"],
+            ["You / We / They", "were"]
           ]
         }
       ]
     },
     dialogue: [
-      { speaker: "Interviewer", text: "Can you use a computer?", translation: "Você sabe usar computador?" },
-      { speaker: "Candidate", text: "Yes, I can. I can design websites.", translation: "Sim, sei. Eu sei criar sites." },
-      { speaker: "Interviewer", text: "That's good. Can you speak Spanish?", translation: "Isso é bom. Você sabe falar espanhol?" },
-      { speaker: "Candidate", text: "No, I can't.", translation: "Não, não sei." }
+      { speaker: "Celia", text: "How was your vacation, Tom?", translation: "Como foram suas férias, Tom?" },
+      { speaker: "Tom", text: "It was great! I went to Italy.", translation: "Foi ótimo! Eu fui para a Itália." },
+      { speaker: "Celia", text: "Did you visit Rome?", translation: "Você visitou Roma?" },
+      { speaker: "Tom", text: "Yes, and I ate amazing pizza.", translation: "Sim, e comi uma pizza incrível." }
     ],
     speakAndRepeat: [
-      { text: "I can't hear you.", translation: "Não consigo te ouvir.", focus: "Can't (Stop T)" },
-      { text: "Can you help me?", translation: "Você pode me ajudar?", focus: "Weak 'can'" }
+      { text: "I went to the beach yesterday.", translation: "Eu fui à praia ontem.", focus: "Irregular verb 'went'" },
+      { text: "Did you buy a ticket?", translation: "Você comprou um ingresso?", focus: "Question with Did" }
     ],
     quiz: [
-      { question: "He ___ play the piano.", options: ["can", "cans", "can to"], correctAnswer: 0, explanation: "Can nunca muda." },
-      { question: "Can they swim? No, they ___.", options: ["don't", "can't", "aren't"], correctAnswer: 1, explanation: "A resposta curta deve usar o mesmo modal da pergunta." }
+      { question: "I ___ a new car last week.", options: ["buyed", "bought", "buy"], correctAnswer: 1, explanation: "O passado de 'buy' é 'bought'." },
+      { question: "___ you go to school?", options: ["Did", "Do", "Was"], correctAnswer: 0, explanation: "Para perguntas no passado com verbos de ação, usamos 'Did'." }
     ]
   }),
 
-  // Unit 1-9: I'm going to see a movie (Future plans)
-  "1-9": createContent({
-    introText: "Vamos fazer planos para o futuro, falar sobre feriados e datas especiais usando 'Be going to'.",
+  // Unit 1-15: I'm going to a soccer match (Plans/Frequency)
+  "1-15": createContent({
+    introText: "Vamos aprender a falar sobre planos futuros, fazer convites por telefone e discutir frequência de atividades.",
     vocabulary: [
+      { word: "Soccer match", translation: "Jogo de futebol", example: "I'm going to a soccer match.", exampleMeaning: "Vou a um jogo de futebol." },
       { word: "Tomorrow", translation: "Amanhã", example: "See you tomorrow.", exampleMeaning: "Te vejo amanhã." },
-      { word: "Tonight", translation: "Hoje à noite", example: "I'm staying home tonight.", exampleMeaning: "Vou ficar em casa hoje à noite." },
-      { word: "Next week", translation: "Semana que vem", example: "We are traveling next week.", exampleMeaning: "Vamos viajar semana que vem." },
-      { word: "Movie", translation: "Filme", example: "Let's watch a movie.", exampleMeaning: "Vamos assistir um filme." },
-      { word: "Birthday", translation: "Aniversário", example: "Happy Birthday!", exampleMeaning: "Feliz aniversário!" }
+      { word: "Tonight", translation: "Esta noite", example: "Are you free tonight?", exampleMeaning: "Você está livre hoje à noite?" },
+      { word: "Usually", translation: "Geralmente", example: "I usually play tennis.", exampleMeaning: "Geralmente jogo tênis." },
+      { word: "Never", translation: "Nunca", example: "I never smoke.", exampleMeaning: "Eu nunca fumo." }
     ],
-    grammarTitle: "Future with 'Be Going To'",
+    grammarTitle: "Invitations & Frequency",
     grammar: {
-      introduction: "Usamos 'Be going to' para planos futuros já decididos. Fórmula: Sujeito + Be + Going to + Verbo.",
+      introduction: "Usamos 'Would you like to...?' para convidar alguém. Também usamos o Present Continuous para falar de planos futuros já confirmados.",
       structures: [
         {
-          label: "Affirmative Plan",
-          fullSentence: "I am going to buy a car.",
-          meaning: "Eu vou comprar um carro.",
-          bricks: [ { text: "I", type: "subject" }, { text: "am", type: "verb" }, { text: "going to", type: "auxiliary" }, { text: "buy", type: "verb" }, { text: "a car", type: "object" } ]
+          label: "Invitation",
+          fullSentence: "Would you like to go?",
+          meaning: "Você gostaria de ir?",
+          bricks: [ { text: "Would", type: "auxiliary" }, { text: "you", type: "subject" }, { text: "like", type: "verb" }, { text: "to go", type: "verb" } ]
         },
         {
-          label: "Question",
-          fullSentence: "Are you going to travel?",
-          meaning: "Você vai viajar?",
-          bricks: [ { text: "Are", type: "verb" }, { text: "you", type: "subject" }, { text: "going to", type: "auxiliary" }, { text: "travel", type: "verb" }, { text: "?", type: "other" } ]
+          label: "Future Plan",
+          fullSentence: "I am working tomorrow.",
+          meaning: "Eu vou trabalhar amanhã (Já planejado).",
+          bricks: [ { text: "I", type: "subject" }, { text: "am", type: "verb" }, { text: "working", type: "verb" }, { text: "tomorrow", type: "adverb" } ]
+        },
+        {
+          label: "Frequency",
+          fullSentence: "I always exercise.",
+          meaning: "Eu sempre me exercito.",
+          bricks: [ { text: "I", type: "subject" }, { text: "always", type: "adverb" }, { text: "exercise", type: "verb" } ]
         }
       ],
       tables: [
         {
-          title: "Future Expressions",
-          headers: ["Expression", "Meaning"],
+          title: "Adverbs of Frequency",
+          headers: ["Adverb", "% Frequency"],
           rows: [
-            ["Tomorrow", "Day after today"],
-            ["Next Month", "The month after this one"],
-            ["Tonight", "This night"]
+            ["Always", "100%"],
+            ["Usually", "80%"],
+            ["Often", "60%"],
+            ["Sometimes", "40%"],
+            ["Never", "0%"]
+          ]
+        },
+        {
+          title: "Making Excuses",
+          headers: ["Refusal", "Excuse"],
+          rows: [
+            ["I'd love to, but...", "I have to work."],
+            ["Sorry, I can't.", "I am busy."]
           ]
         }
       ]
     },
     dialogue: [
-      { speaker: "Ann", text: "What are you going to do this weekend?", translation: "O que você vai fazer neste fim de semana?" },
-      { speaker: "Bob", text: "I'm going to see a soccer match.", translation: "Vou ver um jogo de futebol." },
-      { speaker: "Ann", text: "That sounds fun. I'm going to study.", translation: "Parece divertido. Eu vou estudar." }
+      { speaker: "Dave", text: "Hello?", translation: "Alô?" },
+      { speaker: "Susan", text: "Hi Dave, this is Susan. Would you like to see a movie tonight?", translation: "Oi Dave, é a Susan. Gostaria de ver um filme hoje à noite?" },
+      { speaker: "Dave", text: "I'd love to, but I can't. I'm studying for a test.", translation: "Eu adoraria, mas não posso. Estou estudando para uma prova." },
+      { speaker: "Susan", text: "That's too bad. Maybe next time.", translation: "Que pena. Talvez na próxima." }
     ],
     speakAndRepeat: [
-      { text: "What are you going to do?", translation: "O que você vai fazer?", focus: "Reduction (Gonna)" },
-      { text: "I'm going to stay home.", translation: "Vou ficar em casa.", focus: "Fluency" }
+      { text: "Would you like to come?", translation: "Você gostaria de vir?", focus: "Intonation of invitations" },
+      { text: "I'd love to, but I'm busy.", translation: "Adoraria, mas estou ocupado.", focus: "Polite refusal" }
     ],
     quiz: [
-      { question: "She ___ going to play tennis.", options: ["are", "am", "is"], correctAnswer: 2, explanation: "She usa 'is'." },
-      { question: "Are they ___ to eat?", options: ["go", "going", "goes"], correctAnswer: 1, explanation: "A estrutura é 'going to'." }
+      { question: "___ you like to play tennis?", options: ["Do", "Would", "Are"], correctAnswer: 1, explanation: "Usamos 'Would' para convites (Would you like?)." },
+      { question: "I ___ watch TV in the morning.", options: ["never", "am", "to"], correctAnswer: 0, explanation: "Advérbios de frequência vêm antes do verbo principal." }
     ]
   }),
 
-  // Unit 1-10: Have you ever been there? (Present Perfect)
-  "1-10": createContent({
-    introText: "Esta lição introduz o Present Perfect para falar de experiências de vida, sem dizer exatamente quando aconteceram.",
+  // Unit 1-16: A change for the better (Describing People)
+  "1-16": createContent({
+    introText: "Nesta unidade final do Livro 1, vamos aprender a descrever a aparência física das pessoas e falar sobre mudanças na vida.",
     vocabulary: [
-      { word: "Ever", translation: "Alguma vez", example: "Have you ever seen a ghost?", exampleMeaning: "Você já viu um fantasma?" },
-      { word: "Never", translation: "Nunca", example: "I have never been to Paris.", exampleMeaning: "Eu nunca estive em Paris." },
-      { word: "Been", translation: "Estado/Ido (Particípio)", example: "I have been there.", exampleMeaning: "Eu já estive lá." },
-      { word: "Eaten", translation: "Comido (Particípio)", example: "Have you eaten sushi?", exampleMeaning: "Você já comeu sushi?" }
+      { word: "Appearance", translation: "Aparência", example: "He changed his appearance.", exampleMeaning: "Ele mudou sua aparência." },
+      { word: "Curly", translation: "Encaracolado/Cacheado", example: "She has curly hair.", exampleMeaning: "Ela tem cabelo cacheado." },
+      { word: "Straight", translation: "Liso", example: "I have straight hair.", exampleMeaning: "Eu tenho cabelo liso." },
+      { word: "Glasses", translation: "Óculos", example: "Do you wear glasses?", exampleMeaning: "Você usa óculos?" },
+      { word: "Tall", translation: "Alto(a)", example: "He is tall and thin.", exampleMeaning: "Ele é alto e magro." },
+      { word: "Blond", translation: "Loiro", example: "She has blond hair.", exampleMeaning: "Ela tem cabelo loiro." }
     ],
-    grammarTitle: "Present Perfect (Experience)",
+    grammarTitle: "Describing People (Have vs Be)",
     grammar: {
-      introduction: "O Present Perfect (Have/Has + Particípio) conecta o passado ao presente. Usamos para experiências gerais.",
+      introduction: "Usamos 'Be' para adjetivos gerais (alto, bonito, jovem) e 'Have' para partes do corpo específicas (olhos azuis, cabelo longo).",
       structures: [
         {
-          label: "Question (Have you ever...?)",
-          fullSentence: "Have you ever been to London?",
-          meaning: "Você já esteve em Londres?",
-          bricks: [ { text: "Have", type: "auxiliary" }, { text: "you", type: "subject" }, { text: "ever", type: "adverb" }, { text: "been", type: "verb" }, { text: "to London", type: "preposition" } ]
+          label: "With 'Be' (Adjectives)",
+          fullSentence: "She is tall.",
+          meaning: "Ela é alta.",
+          bricks: [ { text: "She", type: "subject" }, { text: "is", type: "verb" }, { text: "tall", type: "adjective" } ]
         },
         {
-          label: "Affirmative",
-          fullSentence: "I have seen that movie.",
-          meaning: "Eu já vi aquele filme.",
-          bricks: [ { text: "I", type: "subject" }, { text: "have", type: "auxiliary" }, { text: "seen", type: "verb" }, { text: "that movie", type: "object" } ]
+          label: "With 'Have' (Nouns)",
+          fullSentence: "She has blue eyes.",
+          meaning: "Ela tem olhos azuis.",
+          bricks: [ { text: "She", type: "subject" }, { text: "has", type: "verb" }, { text: "blue eyes", type: "object" } ]
         },
         {
-          label: "Negative",
-          fullSentence: "She has never eaten tacos.",
-          meaning: "Ela nunca comeu tacos.",
-          bricks: [ { text: "She", type: "subject" }, { text: "has", type: "auxiliary" }, { text: "never", type: "adverb" }, { text: "eaten", type: "verb" }, { text: "tacos", type: "noun" } ]
+          label: "Order of Adjectives",
+          fullSentence: "He has short curly hair.",
+          meaning: "Ele tem cabelo curto e cacheado.",
+          bricks: [ { text: "He", type: "subject" }, { text: "has", type: "verb" }, { text: "short", type: "adjective" }, { text: "curly", type: "adjective" }, { text: "hair", type: "noun" } ]
         }
       ],
       tables: [
         {
-          title: "Regular vs Irregular Participles",
-          headers: ["Verb", "Past Simple", "Participle (Use with Have)"],
+          title: "Have vs Be",
+          headers: ["Verb", "Usage", "Examples"],
           rows: [
-            ["Visit", "Visited", "Visited"],
-            ["Go", "Went", "Gone / Been"],
-            ["See", "Saw", "Seen"],
-            ["Eat", "Ate", "Eaten"]
+            ["Be", "General Look / Age / Height", "I am young. He is handsome. We are tall."],
+            ["Have", "Hair / Eyes / Features", "I have brown eyes. She has long hair. He has a beard."]
           ]
-        }
-      ]
-    },
-    dialogue: [
-      { speaker: "Max", text: "Have you ever been to a jazz club?", translation: "Você já foi a um clube de jazz?" },
-      { speaker: "Lisa", text: "Yes, I have. I went to one last year.", translation: "Sim, já. Fui a um ano passado." },
-      { speaker: "Max", text: "Was it good?", translation: "Foi bom?" },
-      { speaker: "Lisa", text: "Yes, it was amazing.", translation: "Sim, foi incrível." }
-    ],
-    speakAndRepeat: [
-      { text: "Have you ever been there?", translation: "Você já esteve lá?", focus: "Linking (Have-you)" },
-      { text: "I've never done that.", translation: "Eu nunca fiz isso.", focus: "Contraction I've" }
-    ],
-    quiz: [
-      { question: "Have you ___ sushi?", options: ["eat", "ate", "eaten"], correctAnswer: 2, explanation: "Com Have, usamos o particípio (3ª coluna)." },
-      { question: "___ she ever visited Brazil?", options: ["Do", "Has", "Have"], correctAnswer: 1, explanation: "Para 'She', o auxiliar é 'Has'." }
-    ]
-  }),
-
-  // Unit 1-11: It's a very exciting place (Town & Directions)
-  "1-11": createContent({
-    introText: "Aprenda a descrever cidades e pedir direções usando 'There is/are' e preposições de lugar.",
-    vocabulary: [
-      { word: "Across from", translation: "Em frente a", example: "The bank is across from the park.", exampleMeaning: "O banco é em frente ao parque." },
-      { word: "Between", translation: "Entre", example: "The shop is between the bank and the cafe.", exampleMeaning: "A loja é entre o banco e o café." },
-      { word: "Corner", translation: "Esquina", example: "On the corner of Main St.", exampleMeaning: "Na esquina da Rua Principal." },
-      { word: "Subway", translation: "Metrô", example: "Take the subway.", exampleMeaning: "Pegue o metrô." },
-      { word: "Exciting", translation: "Emocionante/Agitado", example: "New York is exciting.", exampleMeaning: "Nova York é agitada." }
-    ],
-    grammarTitle: "Directions & Prepositions",
-    grammar: {
-      introduction: "Para dar direções, usamos imperativos (vire, vá) e preposições de localização.",
-      structures: [
-        {
-          label: "Asking for directions",
-          fullSentence: "Is there a bank near here?",
-          meaning: "Tem um banco perto daqui?",
-          bricks: [ { text: "Is", type: "verb" }, { text: "there", type: "subject" }, { text: "a bank", type: "noun" }, { text: "near here", type: "preposition" } ]
         },
         {
-          label: "Giving directions",
-          fullSentence: "Go straight and turn left.",
-          meaning: "Vá reto e vire à esquerda.",
-          bricks: [ { text: "Go", type: "verb" }, { text: "straight", type: "adverb" }, { text: "and", type: "conjunction" }, { text: "turn", type: "verb" }, { text: "left", type: "adverb" } ]
-        }
-      ],
-      tables: [
-        {
-          title: "Prepositions of Place",
+          title: "Prepositions of Place (Review)",
           headers: ["Preposition", "Meaning"],
           rows: [
             ["Next to", "Ao lado de"],
-            ["Across from", "Do outro lado da rua / Em frente"],
-            ["On the corner of", "Na esquina de"],
-            ["Between", "No meio de dois lugares"]
+            ["Across from", "De frente para / Do outro lado de"],
+            ["Between", "Entre (dois pontos)"]
           ]
         }
       ]
     },
     dialogue: [
-      { speaker: "Tourist", text: "Excuse me, is there a post office around here?", translation: "Com licença, tem um correio por aqui?" },
-      { speaker: "Local", text: "Yes, there is. It's on Main Street, next to the bank.", translation: "Sim, tem. Fica na Rua Principal, ao lado do banco." },
-      { speaker: "Tourist", text: "Thank you!", translation: "Obrigado!" }
+      { speaker: "Brian", text: "Hi, Alice! I haven't seen you in ages.", translation: "Oi, Alice! Não te vejo há muito tempo." },
+      { speaker: "Alice", text: "Brian? Wow! You look different.", translation: "Brian? Uau! Você parece diferente." },
+      { speaker: "Brian", text: "Really? How?", translation: "Sério? Como?" },
+      { speaker: "Alice", text: "You have a beard now! And you wear glasses.", translation: "Você tem barba agora! E usa óculos." }
     ],
     speakAndRepeat: [
-      { text: "Is there a drugstore nearby?", translation: "Tem uma farmácia por perto?", focus: "Is there linking" },
-      { text: "Turn right at the light.", translation: "Vire à direita no semáforo.", focus: "Directions clarity" }
+      { text: "You look different!", translation: "Você parece diferente!", focus: "Exclamation intonation" },
+      { text: "She has long blond hair.", translation: "Ela tem cabelo loiro e comprido.", focus: "Adjective order" }
     ],
     quiz: [
-      { question: "The bank is ___ the street.", options: ["on", "across", "between"], correctAnswer: 1, explanation: "A expressão correta é 'across the street' (ou across from)." },
-      { question: "___ there any restaurants?", options: ["Is", "Are", "Am"], correctAnswer: 1, explanation: "Restaurants é plural, então usamos 'Are'." }
-    ]
-  }),
-
-  // Unit 1-12: It really happened! (Simple Past)
-  "1-12": createContent({
-    introText: "Vamos contar histórias do passado usando o Simple Past (verbos regulares com -ed e irregulares básicos).",
-    vocabulary: [
-      { word: "Yesterday", translation: "Ontem", example: "I worked yesterday.", exampleMeaning: "Eu trabalhei ontem." },
-      { word: "Last night", translation: "Ontem à noite", example: "We watched TV last night.", exampleMeaning: "Nós assistimos TV ontem à noite." },
-      { word: "Ago", translation: "Atrás (tempo)", example: "Two days ago.", exampleMeaning: "Dois dias atrás." },
-      { word: "Did", translation: "Auxiliar de passado", example: "Did you go?", exampleMeaning: "Você foi?" },
-      { word: "Weekend", translation: "Fim de semana", example: "How was your weekend?", exampleMeaning: "Como foi seu fim de semana?" }
-    ],
-    grammarTitle: "Simple Past (Regular Verbs)",
-    grammar: {
-      introduction: "Para verbos regulares no passado, adicionamos -ed. Para perguntas e negativas, usamos 'Did'.",
-      structures: [
-        {
-          label: "Affirmative",
-          fullSentence: "I stayed home yesterday.",
-          meaning: "Eu fiquei em casa ontem.",
-          bricks: [ { text: "I", type: "subject" }, { text: "stayed", type: "verb" }, { text: "home", type: "noun" }, { text: "yesterday", type: "adverb" } ]
-        },
-        {
-          label: "Negative",
-          fullSentence: "I didn't watch TV.",
-          meaning: "Eu não assisti TV.",
-          bricks: [ { text: "I", type: "subject" }, { text: "didn't", type: "auxiliary" }, { text: "watch", type: "verb" }, { text: "TV", type: "noun" } ]
-        },
-        {
-          label: "Question",
-          fullSentence: "Did you clean the house?",
-          meaning: "Você limpou a casa?",
-          bricks: [ { text: "Did", type: "auxiliary" }, { text: "you", type: "subject" }, { text: "clean", type: "verb" }, { text: "the house", type: "object" }, { text: "?", type: "other" } ]
-        }
-      ],
-      tables: [
-        {
-          title: "-ED Pronunciation Rules",
-          headers: ["Sound", "Rule", "Examples"],
-          rows: [
-            ["/t/", "After voiceless sounds (p, k, sh, ch)", "Worked, Watched"],
-            ["/d/", "After voiced sounds (l, n, v, vowels)", "Played, Cleaned"],
-            ["/id/", "After t or d", "Wanted, Needed"]
-          ]
-        }
-      ]
-    },
-    dialogue: [
-      { speaker: "Ana", text: "Did you have a good weekend?", translation: "Você teve um bom fim de semana?" },
-      { speaker: "Ben", text: "Yes, I did. I played tennis with my brother.", translation: "Sim, tive. Joguei tênis com meu irmão." },
-      { speaker: "Ana", text: "Did you win?", translation: "Você ganhou?" },
-      { speaker: "Ben", text: "No, I didn't. He plays very well.", translation: "Não. Ele joga muito bem." }
-    ],
-    speakAndRepeat: [
-      { text: "I worked late last night.", translation: "Trabalhei até tarde ontem à noite.", focus: "/t/ sound in worked" },
-      { text: "Did you call me?", translation: "Você me ligou?", focus: "Did you linking" }
-    ],
-    quiz: [
-      { question: "She ___ pizza last night.", options: ["cook", "cooked", "cooks"], correctAnswer: 1, explanation: "Passado regular requer -ed." },
-      { question: "___ you go to the party?", options: ["Do", "Did", "Are"], correctAnswer: 1, explanation: "Auxiliar de passado é Did." }
+      { question: "She ___ tall and thin.", options: ["has", "is", "does"], correctAnswer: 1, explanation: "Para adjetivos como 'alto', usamos o verbo To Be (is)." },
+      { question: "He has ___ hair.", options: ["short black", "black short", "short black"], correctAnswer: 0, explanation: "Ordem: Tamanho (Short) vem antes de Cor (Black)." }
     ]
   })
 };
 
-// EXPORTED FUNCTION
-export const getStaticUnitContent = (unitId: string, title: string, description: string): GeneratedUnitContent => {
-  if (PREDEFINED_UNITS[unitId]) {
-    return PREDEFINED_UNITS[unitId];
+export const getStaticUnitContent = (id: string, unitTitle: string, unitDescription: string): GeneratedUnitContent => {
+  if (PREDEFINED_UNITS[id]) {
+    return PREDEFINED_UNITS[id];
   }
 
-  // Fallback Template for units not hardcoded yet
+  // Fallback for units not yet hardcoded
   return createContent({
-    introText: `Welcome to ${title}. In this unit, we will explore: ${description}. This unit content is currently a template placeholder.`,
+    introText: `Bem-vindo à unidade "${unitTitle}". Esta lição abrange: ${unitDescription}.`,
     vocabulary: [
-      { word: "Example Word", translation: "Exemplo", example: "This is a placeholder example.", exampleMeaning: "Este é um exemplo temporário." },
-      { word: "Topic Word 1", translation: "Palavra do Tópico 1", example: "Used in context.", exampleMeaning: "Usado em contexto." }
+      { word: "Example", translation: "Exemplo", example: "This is a placeholder.", exampleMeaning: "Este é um espaço reservado." }
     ],
-    grammarTitle: "Key Structure",
     grammar: {
-      introduction: "In this lesson, we focus on the grammar structures relevant to the topic.",
+      introduction: "O conteúdo detalhado desta unidade será adicionado em breve.",
       structures: [
         {
-          label: "Example Structure",
-          fullSentence: "Subject + Verb + Object",
-          meaning: "Sujeito + Verbo + Objeto",
-          bricks: [
-            { text: "I", type: "subject" },
-            { text: "learn", type: "verb" },
-            { text: "English", type: "object" }
-          ]
+          label: "Structure Preview",
+          fullSentence: "Content coming soon.",
+          meaning: "Conteúdo em breve.",
+          bricks: [{ text: "Content", type: "subject" }, { text: "coming", type: "verb" }, { text: "soon", type: "adverb" }]
         }
       ],
-      tables: [
-        {
-          title: "Concept Table",
-          headers: ["Form", "Example"],
-          rows: [
-            ["Type 1", "Example 1"],
-            ["Type 2", "Example 2"]
-          ]
-        }
-      ]
-    },
-    dialogue: [
-      { speaker: "A", text: "Hello, this is a practice dialogue.", translation: "Olá, este é um diálogo de prática." },
-      { speaker: "B", text: "We are learning about " + title, translation: "Estamos aprendendo sobre " + title }
-    ],
-    speakAndRepeat: [
-      { text: "This is a practice sentence.", translation: "Esta é uma frase de prática.", focus: "Clear pronunciation" }
-    ],
-    quiz: [
-      { question: "What is the main topic?", options: [title, "Math", "History"], correctAnswer: 0, explanation: "We are studying the unit topic." }
-    ]
+      tables: []
+    }
   });
 };
